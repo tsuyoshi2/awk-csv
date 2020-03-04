@@ -1,0 +1,25 @@
+#! /usr/bin/make -f
+INSTALL = install --preserve-timestamps --owner=root --group=root
+ifeq (,$(filter terse,$(DEB_BUILD_OPTIONS)))
+	INSTALL += --verbose
+endif
+INSTALL_DIRECTORY = $(INSTALL) --directory --mode=0755
+INSTALL_FILE = $(INSTALL) --mode=0644
+binary: binary-indep
+binary-arch:
+binary-indep:
+	$(INSTALL_DIRECTORY) debian/tmp/usr/share/awk/
+	$(INSTALL_FILE) csv.awk debian/tmp/usr/share/awk/
+	$(INSTALL_DIRECTORY) debian/tmp/usr/share/doc/awk-csv/
+	$(INSTALL_FILE) README debian/copyright debian/tmp/usr/share/doc/awk-csv/
+	$(INSTALL_FILE) debian/changelog \
+		debian/tmp/usr/share/doc/awk-csv/changelog.Debian
+	gzip -9 debian/tmp/usr/share/doc/awk-csv/changelog.Debian
+	$(INSTALL_DIRECTORY) debian/tmp/DEBIAN/
+	dpkg-gencontrol
+	dpkg-deb --build debian/tmp ..
+clean:
+	rm -rf debian/tmp
+build:
+build-arch:
+build-indep:

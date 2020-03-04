@@ -1,0 +1,21 @@
+Source: awk-csv
+Maintainer: Christopher Cramer <tsuyoshi@yumegakanau.org>
+Section: libs
+Priority: optional
+Standards-Version: 4.2.1.4
+
+Package: awk-csv
+Architecture: all
+Section: libs
+Priority: optional
+Recommends: awk
+Description: Awk library for reading and writing CSV files
+ This library provides functions for reading and writing CSV (Comma
+ Separated Value) files, which are described in RFC 4180. The CSV
+ format is supported by many spreadsheet and database programs, such as
+ LibreOffice Calc, PostgreSQL, etc. and commonly used for transferring
+ tabular data.
+ .
+ Using this library is better than rolling your own CSV parsing
+ using split(), because it properly handles data with embedded commas,
+ newlines, and quotes.

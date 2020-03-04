@@ -1,0 +1,81 @@
+This is an Awk library for reading and writing CSV (Comma Separated
+Value) data. Quoted fields in CSV may contain commas and newlines,
+so naively using split() to parse CSV is not always going to work.
+
+To use this library, you can add "-f /usr/share/awk/csv.awk" to your
+awk command line before your own script, for example:
+	awk -f /usr/share/awk/csv.awk -f script-using-csv.awk
+
+Input Functions
+
+csv_read(record)
+	Read CSV from current input file (sets FNR and NR)
+
+csv_read_command(record, command)
+	Read CSV from output of shell command
+
+csv_read_file(record, filename)
+	Read CSV from named file
+
+All input functions return 0 on end of file, -1 on error, or the number of
+fields. Fields are placed in numbered fields of record, starting from 1:
+record[1], record[2], ... record[n]. There is always at least one field
+per input record - an empty input record yields a single empty field.
+For csv_read_command or csv_read_file, on end of file, it is necessary
+to call close(). CRLF sequences within fields are converted to plain LF.
+
+Convenience Function
+
+csv_header(record)
+	Reverse the indices and values of an array
+
+Traditionally, CSV files will have a first record indicating the names
+of the fields for each record. This is simply a convenience function
+to use on that first record, so that you can look up the number of a
+field by its name. It will convert an array such as:
+	header[1] = "foo"
+	header[2] = "bar"
+	header[3] = "baz"
+	header[4] = "quux"
+into:
+	header["foo"] = 1
+	header["bar"] = 2
+	header["baz"] = 3
+	header["quux"] = 4
+
+Output Functions
+
+csv_write(record)
+	Write CSV to standard output
+
+csv_write_command(record, command)
+	Write CSV to input of shell command
+
+csv_write_file(record, filename)
+	Write CSV to named file
+
+csv_append_file(record, filename)
+	Append CSV to named file
+
+Output functions take a record array with numbered fields, starting with 1:
+record[1], record[2], ... If the record is missing a field n, all fields
+numbered greater than n will be ignored. If the record has no field 1,
+a record with a single empty field will be output. It is necessary to
+call close() when output is finished.
+
+The CSV format understood by this library
+
+Each record is separated by either CRLF or LF alone (the CR is dropped).
+Within each record, fields are separated by commas. Fields (or even parts
+of fields) may be quoted with double quotes, which is necessary when
+fields contain commas, newlines, or double quotes. A double quote within
+a quoted field may be escaped by preceding it with another double quote.
+This is the same as RFC 4180, except that the RFC requires CRLF record
+separators and does not allow LF alone.
+
+This code relies on no more than the POSIX awk specification.
+It has been successfully tested with:
+	gawk
+	mawk
+	Busybox awk
+	Original awk

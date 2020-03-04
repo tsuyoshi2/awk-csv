@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Contact: Christopher Cramer <tsuyoshi@yumegakanau.org>
+License: public-domain
+ This program is hereby released into the public domain.
+
+Files: *
+Copyright: Public Domain
+License: public-domain
+ This program is hereby released into the public domain.
